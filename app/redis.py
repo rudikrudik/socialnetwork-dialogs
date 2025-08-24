@@ -41,7 +41,7 @@ def redis_connect():
                             )
     try:
         r_connect.ping()
-    except redis.exceptions.RedisError as error:
+    except BaseException as error:
         print(f"Error {error}", flush=True)
 
     return r_connect
