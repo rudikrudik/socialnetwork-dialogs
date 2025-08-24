@@ -22,11 +22,13 @@ jobs:
     steps:
       - name: Create new file
         run: |
+          touch .env
           echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" > .env
           echo "REDIS_DIALOG_LOGIN=${{ secrets.REDIS_DIALOG_LOGIN }} >> .env
           echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }} >> .env
           echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }} >> .env
           echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }} >> .env
+          cat .env
         shell: bash
 
       - name: Checkout repository
