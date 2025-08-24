@@ -20,23 +20,20 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
+      - name: Create .env file
+        run: |
+            echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" >> .env
+            echo "REDIS_DIALOG_LOGIN=${{ secrets.REDIS_DIALOG_LOGIN }} >> .env
+            echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }} >> .env
+            echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }} >> .env
+            echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }} >> .env
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build Docker image
         run: >
           docker build -t ${{ github.event.repository.name }}:latest .
-
-      - name: Create .env file
-        run: |
-          echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" >> .env
-          echo "REDIS_DIALOG_LOGIN=${{ secrets.REDIS_DIALOG_LOGIN }} >> .env
-          echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }} >> .env
-          echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }} >> .env
-          echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }} >> .env
-
-      - name: Copy .env to container
-        run: docker cp .env my-container:/${{ github.event.repository.name }}/.env
 
   deploy:
     runs-on: self-hosted
