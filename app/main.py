@@ -13,8 +13,7 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
     # user_id_from_token = dep.get_current_user(token)
 
     try:
-        result = redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message)
-        if result:
+        if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
             return {"Message send": "ok", "from": from_user, "to": to_user}
         else:
             return {"Message send": "false"}
