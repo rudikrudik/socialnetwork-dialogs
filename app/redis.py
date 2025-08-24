@@ -73,7 +73,7 @@ def redis_search_user_dialog(id_user: int) -> list:
 
 
 def redis_db_get_user_messages(from_user: int, to_user: int) -> list:
-    print("Hello from redis", flush=True)
+    print(f"Hello from redis {from_user} {to_user}", flush=True)
     r = redis_connect()
     first, last = find_sort_id(from_user, to_user)
 

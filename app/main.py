@@ -9,6 +9,9 @@ app = FastAPI(title=settings.PROJECT_NAME,
               version=settings.PROJECT_VERSION)
 
 
+redis.redis_connect()
+
+
 @app.post("/dialog/{from_user}/send/{to_user}")
 def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage):
     # token: str = Depends(dep.get_token)
