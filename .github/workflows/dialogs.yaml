@@ -20,8 +20,6 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - name: Create .env file
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
