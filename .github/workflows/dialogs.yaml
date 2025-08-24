@@ -22,14 +22,11 @@ jobs:
     steps:
       - name: Create .env file
         run: |
-          touch .env
-          echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" > .env
-          echo "REDIS_DIALOG_LOGIN=${{ secrets.REDIS_DIALOG_LOGIN }}" >> .env
-          echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }}" >> .env
-          echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }}" >> .env
-          echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }}" >> .env
-          cat .env
-        shell: bash
+          echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" > data
+          echo "REDIS_DIALOG_LOGIN=${{ secrets.REDIS_DIALOG_LOGIN }}" >> data
+          echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }}" >> data
+          echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }}" >> data
+          echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }}" >> data
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,4 +43,4 @@ jobs:
         run: docker rm -f ${{ github.event.repository.name }}
 
       - name: Run a command inside the container
-        run: docker run -d -v .env:/usr/src/.env --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
+        run: docker run -d -v data:/usr/src/.env --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
