@@ -35,9 +35,6 @@ jobs:
         run: >
           docker build -t ${{ github.event.repository.name }}:latest .
 
-      - name: Cat file
-        run: cat .env
-
   deploy:
     runs-on: self-hosted
     needs: build
