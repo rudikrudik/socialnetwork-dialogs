@@ -22,11 +22,11 @@ jobs:
     steps:
       - name: Create .env file
         run: |
-          echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" > data
-          echo "REDIS_DIALOG_LOGIN=${{ secrets.REDIS_DIALOG_LOGIN }}" >> data
-          echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }}" >> data
-          echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }}" >> data
-          echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }}" >> data
+          echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" > .env
+          echo "REDIS_DIALOG_LOGIN=${{ secrets.REDIS_DIALOG_LOGIN }}" >> .env
+          echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }}" >> .env
+          echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }}" >> .env
+          echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }}" >> .env
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,15 +35,15 @@ jobs:
         run: >
           docker build -t ${{ github.event.repository.name }}:latest .
 
+      - name: Cat file
+        run: cat .env
+
   deploy:
     runs-on: self-hosted
     needs: build
     steps:
-      - name: Cat env file
-        run: echo "cat data"
-
       - name: Remove old container
         run: docker rm -f ${{ github.event.repository.name }}
 
       - name: Run a command inside the container
-        run: docker run -d -v data:/usr/src/.env --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
+        run: docker run -d --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
