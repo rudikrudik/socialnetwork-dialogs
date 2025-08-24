@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from starlette import status
-from schema import UserMessage
-from redis import redis as redis_db
-from config import settings
+from app.schema import UserMessage
+from app.redis import redis
+from app.config import settings
 
 
 app = FastAPI(title=settings.PROJECT_NAME,
@@ -15,7 +15,7 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
     # user_id_from_token = dep.get_current_user(token)
 
     try:
-        if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
+        if redis.redis_db_send_message_from_to(from_user, to_user, user_message.message):
             return {"Message send": "ok", "from": from_user, "to": to_user}
         else:
             return {"Message send": "false"}
@@ -33,7 +33,7 @@ def get_messages_from_to_user(from_user: int, to_user: int):
 
     try:
         print(f"Request from {from_user} to {to_user}")
-        result = redis_db.redis_db_get_user_messages(from_user, to_user)
+        result = redis.redis_db_get_user_messages(from_user, to_user)
         print(f"Result query to Redis: {result}", flush=True)
         if result:
             return result
@@ -50,7 +50,7 @@ def get_messages_from_to_user(from_user: int, to_user: int):
 def get_all_messages_from_user(user_id: int):
     try:
         result_query = []
-        for r in redis_db.redis_search_user_dialog(user_id):
+        for r in redis.redis_search_user_dialog(user_id):
             result_query.append(r)
         return result_query
     except BaseException:
