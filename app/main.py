@@ -1,24 +1,57 @@
-from fastapi import FastAPI, WebSocket
-from starlette.websockets import WebSocketDisconnect
-from app.schema import UserFriends
-from app.manager import manager
-
-app = FastAPI()
-
-
-@app.post("/post/feed/posted")
-async def push_notify_post(data: UserFriends):
-    await manager.send_message(data.id, data.friends)
-    return {"message": "Notification sent to WebSocket clients"}
+from fastapi import FastAPI, HTTPException
+from starlette import status
+from app.schema import UserMessage
+from app.redis import redis as redis_db
+from app.config import settings
+app = FastAPI(title=settings.PROJECT_NAME,
+              version=settings.PROJECT_VERSION)
 
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await manager.connect(websocket)
+@app.post("/dialog/{from_user}/send/{to_user}")
+def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage):
+    # token: str = Depends(dep.get_token)
+    # user_id_from_token = dep.get_current_user(token)
 
     try:
-        while True:
-            await websocket.receive_text()
+        result = redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message)
+        if result:
+            return {"Message send": "ok", "from": from_user, "to": to_user}
+        else:
+            return {"Message send": "false"}
+    except BaseException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User message not send"
+        )
 
-    except WebSocketDisconnect:
-        await manager.disconnect(websocket)
+
+@app.post("/dialog/{from_user}/get/{to_user}")
+def get_messages_from_to_user(from_user: int, to_user: int):
+    # token: str = Depends(dep.get_token)
+    # user_id_from_token = dep.get_current_user(token)
+
+    try:
+        result = redis_db.redis_db_get_user_messages(from_user, to_user)
+        if result:
+            return result
+        else:
+            return {"Message get": "false"}
+    except BaseException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User dialog not found"
+        )
+
+
+@app.get("/dialog/{user_id}/list")
+def get_all_messages_from_user(user_id: int):
+    try:
+        result_query = []
+        for r in redis_db.redis_search_user_dialog(user_id):
+            result_query.append(r)
+        return result_query
+    except BaseException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dialog not find"
+        )
