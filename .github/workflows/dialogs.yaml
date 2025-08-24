@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - name: Create new file
+      - name: Create .env file
         run: |
           touch .env
           echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" > .env
@@ -46,4 +46,4 @@ jobs:
         run: docker rm -f ${{ github.event.repository.name }}
 
       - name: Run a command inside the container
-        run: docker run -d --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
+        run: docker run -d -v .env:/usr/src/.env --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
