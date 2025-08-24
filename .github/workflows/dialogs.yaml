@@ -20,6 +20,9 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Create .env file
         run: |
           echo "REDIS_DIALOG_HOST=${{ secrets.REDIS_DIALOG_HOST }}" > .env
@@ -27,9 +30,6 @@ jobs:
           echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }}" >> .env
           echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }}" >> .env
           echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }}" >> .env
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Build Docker image
         run: >
