@@ -4,9 +4,10 @@ from app.schema import UserMessage
 import app.redis_db as redis_db
 from app.config import settings
 
-
 app = FastAPI(title=settings.PROJECT_NAME,
-              version=settings.PROJECT_VERSION)
+              version=settings.PROJECT_VERSION,
+              root_path="/v1/dialogs"
+              )
 
 
 @app.post("/dialog/{from_user}/send/{to_user}")
