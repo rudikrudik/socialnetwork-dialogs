@@ -43,4 +43,4 @@ jobs:
         run: docker rm -f ${{ github.event.repository.name }}
 
       - name: Run a command inside the container
-        run: docker run -d --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
+        run: docker run -d -p 8002:8002 --name ${{ github.event.repository.name }} ${{ github.event.repository.name }}:latest
