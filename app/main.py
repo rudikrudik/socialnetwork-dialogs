@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from starlette import status
 from app.schema import UserMessage
-import redis_db
+import app.redis_db as redis_db
 from app.config import settings
 
 
