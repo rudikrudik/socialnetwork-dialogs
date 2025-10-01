@@ -30,6 +30,10 @@ jobs:
           echo "REDIS_DIALOG_PORT=${{ secrets.REDIS_DIALOG_PORT }}" >> .env
           echo "REDIS_DIALOG_PASSWORD=${{ secrets.REDIS_DIALOG_PASSWORD }}" >> .env
           echo "REDIS_DIALOG_DB=${{ secrets.REDIS_DIALOG_DB }}" >> .env
+          echo "DIALOG_UNREAD_MESSAGES_HOST=${{ secrets.DIALOG_UNREAD_MESSAGES_HOST }}" >> .env
+          echo "DIALOG_UNREAD_MESSAGES_PORT=${{ secrets.DIALOG_UNREAD_MESSAGES_PORT }}" >> .env
+          echo "DIALOG_UNREAD_ADD_URL=${{ secrets.DIALOG_UNREAD_ADD_URL }}" >> .env
+          echo "DIALOG_UNREAD_GET_URL=${{ secrets.DIALOG_UNREAD_GET_URL }}" >> .env
 
       - name: Build Docker image
         run: >
