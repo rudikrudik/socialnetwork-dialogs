@@ -56,10 +56,10 @@ def redis_db_send_message_from_to(from_user: int, to_user: int, message: str) ->
 
     operation = r.register_script(send_message)
 
-    result = operation(keys=[f"dialog:{first}:{last}"], args=[from_user,
-                                                              to_user,
-                                                              datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                                              message]).decode("utf-8")
+    operation(keys=[f"dialog:{first}:{last}"], args=[from_user,
+                                                     to_user,
+                                                     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                                     message]).decode("utf-8")
 
 
 def redis_search_user_dialog(id_user: int) -> list:
