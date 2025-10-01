@@ -3,6 +3,7 @@ from starlette import status
 from app.schema import UserMessage
 import app.redis_db as redis_db
 from app.config import settings
+import requests
 
 app = FastAPI(title=settings.PROJECT_NAME,
               version=settings.PROJECT_VERSION,
@@ -17,6 +18,13 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
 
     try:
         if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
+            url = f"http://{settings.DIALOG_UNREAD_ADD}/{from_user}/{to_user}"
+            try:
+                response = requests.post(url)
+                response.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                print(f"An error occurred: {e}")
+
             return {"Message send": "ok", "from": from_user, "to": to_user}
         else:
             return {"Message send": "false"}

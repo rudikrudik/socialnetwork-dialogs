@@ -1,6 +1,5 @@
 import json
 import redis
-import requests
 
 from datetime import datetime
 from app.config import settings
@@ -61,14 +60,6 @@ def redis_db_send_message_from_to(from_user: int, to_user: int, message: str) ->
                                                               to_user,
                                                               datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                                               message]).decode("utf-8")
-
-    if result:
-        url = f"http://{settings.DIALOG_UNREAD_ADD}/{from_user}/{to_user}"
-        try:
-            response = requests.post(url)
-            response.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
 
 
 def redis_search_user_dialog(id_user: int) -> list:
