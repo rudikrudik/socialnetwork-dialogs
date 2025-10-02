@@ -20,14 +20,11 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
     headers = {"Content-Type": "application/json"}
 
     try:
-        result = redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message)
-        print("result", result, flush=True)
-        if result:
+        if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
             try:
                 response = requests.post(url, headers=headers)
             except requests.exceptions.RequestException as e:
-                print(f"An error occurred: {e}, {response.text}")
-
+                print(f"An error occurred request: {e}, Status code {response.status_code}")
             return {"Message send": "ok", "from": from_user, "to": to_user}
         else:
             return {"Message send": "false"}
