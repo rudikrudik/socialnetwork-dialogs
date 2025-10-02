@@ -20,7 +20,9 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
     headers = {"Content-Type": "application/json"}
 
     try:
-        if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
+        result = redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message)
+        print("result", result, flush=True)
+        if result:
             try:
                 response = requests.post(url, headers=headers)
             except requests.exceptions.RequestException as e:
