@@ -18,6 +18,7 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
     print("Hello from dialog send", flush=True)
     url = (f"http://{settings.DIALOG_UNREAD_MESSAGES_HOST}:{settings.DIALOG_UNREAD_MESSAGES_PORT}"
            f"{settings.DIALOG_UNREAD_ADD_URL}{from_user}/{to_user}")
+
     print("url", url, flush=True)
 
     try:
