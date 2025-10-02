@@ -22,6 +22,7 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
             print("url", url, flush=True)
             try:
                 response = requests.post(url)
+                print("Response", response)
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 print(f"An error occurred: {e}")
