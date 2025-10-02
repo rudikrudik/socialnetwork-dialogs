@@ -22,11 +22,13 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
 
     print("url", url, flush=True)
 
+    response = requests.post(url, headers=headers)
+    print("Response", response, flush=True)
+
     try:
         if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
             try:
-                response = requests.post(url, headers=headers)
-                print("Response", response)
+
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 print(f"An error occurred: {e}")
