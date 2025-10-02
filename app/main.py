@@ -15,23 +15,16 @@ app = FastAPI(title=settings.PROJECT_NAME,
 def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage):
     # token: str = Depends(dep.get_token)
     # user_id_from_token = dep.get_current_user(token)
-    print("Hello from dialog send", flush=True)
     url = (f"http://{settings.DIALOG_UNREAD_MESSAGES_HOST}:{settings.DIALOG_UNREAD_MESSAGES_PORT}"
            f"{settings.DIALOG_UNREAD_ADD_URL}{from_user}/{to_user}")
     headers = {"Content-Type": "application/json"}
 
-    print("url", url, flush=True)
-
-    response = requests.post(url, headers=headers)
-    print("Response", response.text , flush=True)
-
     try:
         if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
             try:
-
-                response.raise_for_status()
+                response = requests.post(url, headers=headers)
             except requests.exceptions.RequestException as e:
-                print(f"An error occurred: {e}")
+                print(f"An error occurred: {e}, {response.text}")
 
             return {"Message send": "ok", "from": from_user, "to": to_user}
         else:
