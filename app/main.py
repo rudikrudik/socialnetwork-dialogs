@@ -18,13 +18,14 @@ def send_message_to_user(from_user: int, to_user: int, user_message: UserMessage
     print("Hello from dialog send", flush=True)
     url = (f"http://{settings.DIALOG_UNREAD_MESSAGES_HOST}:{settings.DIALOG_UNREAD_MESSAGES_PORT}"
            f"{settings.DIALOG_UNREAD_ADD_URL}{from_user}/{to_user}")
+    headers = {"Content-Type": "application/json"}
 
     print("url", url, flush=True)
 
     try:
         if redis_db.redis_db_send_message_from_to(from_user, to_user, user_message.message):
             try:
-                response = requests.post(url)
+                response = requests.post(url, headers=headers)
                 print("Response", response)
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
