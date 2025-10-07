@@ -65,3 +65,18 @@ def get_all_messages_from_user(user_id: int):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Dialog not find"
         )
+
+
+@app.get("/dialog/lastmessage/{from_user}/get/{to_user}")
+def get_last_message_from_user(from_user: int, to_user: int):
+    try:
+        result = redis_db.redis_db_get_last_message(from_user, to_user)
+        if result:
+            return {"message": result}
+        else:
+            return {"message": "not found"}
+    except BaseException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dialog not find"
+        )
