@@ -86,5 +86,7 @@ def redis_db_get_last_message(from_user: int, to_user: int) -> str:
     first, last = find_sort_id(from_user, to_user)
 
     last_item = r.lindex(f"dialog:{first}:{last}", -1)
-    return json.loads(last_item.decode("utf-8"))
+    last_message = json.loads(last_item.decode("utf-8"))
+    return last_message["message"]
+
 
