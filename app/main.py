@@ -72,7 +72,7 @@ def get_last_message_from_user(from_user: int, to_user: int):
     try:
         result = redis_db.redis_db_get_last_message(from_user, to_user)
         if result:
-            return {"message": result}
+            return result
         else:
             return {"message": "not found"}
     except BaseException:
