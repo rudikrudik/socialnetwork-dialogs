@@ -78,5 +78,5 @@ def get_last_message_from_user(from_user: int, to_user: int):
     except BaseException:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Dialog not find"
+            detail="Dialog not found"
         )

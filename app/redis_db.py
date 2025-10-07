@@ -81,12 +81,13 @@ def redis_db_get_user_messages(from_user: int, to_user: int) -> list:
     return [json.loads(i.decode("utf-8")) for i in dialog]
 
 
-def redis_db_get_last_message(from_user: int, to_user: int) -> str:
+def redis_db_get_last_message(from_user: int, to_user: int) -> str | bool:
     r = redis_connect()
     first, last = find_sort_id(from_user, to_user)
 
     last_item = r.lindex(f"dialog:{first}:{last}", -1)
-    last_message = json.loads(last_item.decode("utf-8"))
-    return last_message["message"]
 
+    if last_item:
+        return json.loads(last_item.decode("utf-8"))
 
+    return False
